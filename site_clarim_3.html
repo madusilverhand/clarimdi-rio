@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarim Diário - O Jornal de Nova York</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Libre+Franklin:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+/* 1. CONFIGURAÇÕES GERAIS */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f0f0f0;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+  margin: 0;
+  min-height: 100vh;
+  padding: 20px 0;
+  place-items: center;
+  font-family: 'Playfair Display', serif;
+}
+
+/* 2. CONTAINER DO SLIDE */
+.slide-container {
+  background-color: #fdfdfd;
+  border-radius: 2px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  height: 720px;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  width: 1280px;
+}
+
+/* 3. NAVEGAÇÃO E TOPO */
+.site-nav {
+  background-color: #fdfdfd;
+  border-bottom: 3px solid #000;
+  border-top: 5px solid #000;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 40px;
+  width: 100%;
+  z-index: 10;
+}
+
+.top-bar-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 12px;
+  color: #333;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+.top-bar-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 12px;
+  color: #333;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+.site-nav .masthead {
+  text-align: center;
+  margin: 5px 0 10px 0;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.site-nav .masthead img {
+  max-width: 600px;
+  max-height: 100px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: contrast(120%);
+}
+
+.site-nav .nav-links {
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  gap: 30px;
+  justify-content: center;
+  padding: 8px 0;
+  text-transform: uppercase;
+}
+
+.site-nav .nav-links span {
+  cursor: pointer;
+  color: #121212;
+}
+
+.site-nav .nav-links span:hover {
+  color: #8b0000;
+}
+
+/* 4. LAYOUTS DE CONTEÚDO */
+.content-wrapper {
+  padding: 30px 40px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  color: #121212;
+  margin: 0;
+}
+
+p, li {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: #222;
+  line-height: 1.4;
+}
+
+/* --- LAYOUT ESPECÍFICO DA CAPA (NYT STYLE) --- */
+.front-page-grid {
+    display: grid;
+    /* Coluna Texto | Coluna Imagem | Coluna Sidebar */
+    grid-template-columns: 1fr 1.3fr 0.7fr; 
+    gap: 30px;
+    height: 100%;
+}
+
+/* Coluna 1: Texto Principal */
+.fp-text-col {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #ddd;
+    padding-right: 20px;
+    /* Garante que o conteúdo se espalhe verticalmente mas respeite limites */
+    justify-content: flex-start; 
+}
+
+.article-meta {
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 11px;
+  color: #555;
+  border-bottom: 1px solid #000;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+}
+
+.fp-headline {
+    font-size: 38px; /* Reduzido levemente para evitar empurrar demais o conteúdo */
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+}
+
+.fp-subhead {
+    font-size: 18px;
+    font-weight: 700;
+    color: #444;
+    line-height: 1.2;
+    margin-bottom: 15px;
+}
+
+.fp-lead {
+    font-size: 15px;
+    font-weight: 700;
+    text-align: justify;
+    color: #111;
+}
+
+.fp-quote-box {
+    margin-top: auto; /* Empurra para baixo */
+    margin-bottom: 20px; /* Adicionado margem para "subir" da borda inferior */
+    border-top: 1px solid #000; 
+    border-bottom: 1px solid #000;
+    padding: 15px 0;
+}
+
+/* Coluna 2: Imagem Principal */
+.fp-image-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.fp-main-image {
+    width: 100%;
+    height: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    filter: grayscale(100%) contrast(110%);
+}
+
+.fp-caption {
+    font-family: 'Libre Franklin', sans-serif;
+    font-size: 10px;
+    color: #666;
+    text-align: right;
+    margin-top: 5px;
+    font-weight: 700;
+}
+
+/* Coluna 3: Sidebar (Barra Lateral) */
+.fp-sidebar-col {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #ddd;
+    padding-left: 20px;
+    gap: 12px; /* Reduzido o gap para caber tudo (antes 15px) */
+}
+
+.sidebar-item {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #000; /* Linha separadora */
+    padding-top: 8px; /* Reduzido padding (antes 10px) */
+}
+
+.sidebar-img {
+    width: 100%;
+    height: 80px; /* Reduzido altura para garantir que as 3 caibam (antes 90px) */
+    object-fit: cover; 
+    border: 1px solid #ccc;
+    margin-bottom: 8px;
+    filter: grayscale(30%);
+}
+
+.sidebar-meta {
+    font-family: 'Libre Franklin', sans-serif;
+    font-size: 10px;
+    margin-bottom: 2px;
+}
+
+.sidebar-cat {
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #8b0000;
+}
+
+.sidebar-author {
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.sidebar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 12px; /* Reduzido levemente (antes 13px) */
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* --- LAYOUT MATÉRIA INTERNA (MJ) --- */
+.mj-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 40px;
+    height: 100%;
+    align-items: start;
+}
+
+.mj-image {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    border: 1px solid #000;
+    filter: grayscale(100%) sepia(20%);
+}
+
+/* --- GIRO RÁPIDO & ASSINATURA --- */
+.city-beat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  height: 100%;
+  margin-top: 20px;
+}
+
+.beat-tile {
+  background: #fff;
+  border: 2px solid #000;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+}
+
+.beat-header {
+  border-bottom: 2px solid #000;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.beat-header h3 {
+  font-family: 'Anton', sans-serif;
+  font-size: 24px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.beat-content p {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.beat-stat {
+  font-family: 'Anton', sans-serif;
+  font-size: 42px;
+  color: #121212;
+  margin-top: 10px;
+}
+
+.subscribe-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  background-color: #fdfdfd;
+  background-image: radial-gradient(#ccc 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.subscribe-box {
+  background: #fff;
+  border: 5px solid #000;
+  padding: 60px 80px;
+  max-width: 900px;
+  box-shadow: 15px 15px 0px #8b0000;
+}
+
+.subscribe-box .logo-img {
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+.subscribe-box h2 {
+  font-size: 42px;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.subscribe-btn {
+  background-color: #8b0000;
+  color: #fff;
+  font-family: 'Anton', sans-serif;
+  font-size: 32px;
+  padding: 15px 50px;
+  border: none;
+  text-transform: uppercase;
+  margin-top: 30px;
+  display: inline-block;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: CAPA (Layout 3 Colunas) -->
+<div class="slide-container" id="slide1">
+    <div class="site-nav">
+        <div class="top-bar-flex">
+            <span>Edição Digital: Nova York</span>
+            <span><i class="fa-solid fa-user"></i> Entrar</span>
+        </div>
+        <div class="masthead">
+            <img src="Título.png" alt="Clarim Diário">
+        </div>
+        <div class="nav-links">
+            <span>Mundo</span>
+            <span style="color:#8b0000; text-decoration: underline;">Nova York</span>
+            <span>Política</span>
+            <span>Crime</span>
+            <span>Cultura</span>
+            <span>Esporte</span>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="front-page-grid">
+            
+            <!-- Coluna 1: Texto Principal -->
+            <div class="fp-text-col">
+                <div class="article-meta">
+                    <span><span style="color:#8b0000;">BEN URICH</span> • CRIME</span>
+                    <span>12/06/2025</span>
+                </div>
+                <h1 class="fp-headline">DEMÔNIO OU FANTASMA?</h1>
+                <h2 class="fp-subhead">Cena em Soho deixa pistas — e feridos — acerca da volta do Demolidor.</h2>
+                <p class="fp-lead">Na madrugada passada, na escola abandonada no bairro de Soho, Turk e seus capangas montaram um laboratório improvisado de Cocaína. O que eles não esperavam, era a vinda de um vigilante.</p>
+                
+                <!-- Caixa "Fontes in loco" centralizada verticalmente no espaço restante -->
+                <div class="fp-quote-box">
+                    <p style="font-size: 15px; font-style: italic; margin: 0;">
+                        Fontes in loco relataram que os peritos encontraram padrões de comportamento que batem com o modus operandi do Demolidor. Será que ele voltou? E se retornou... Do que está com tanta raiva?
+                    </p>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Imagem Central -->
+            <div class="fp-image-col">
+                <img src="Abandoned School.jpg" class="fp-main-image" alt="Escola Abandonada em Soho">
+                <div class="fp-caption">ESCOLA ABANDONADA EM SOHO. FOTO: ARQUIVO</div>
+            </div>
+
+            <!-- Coluna 3: Sidebar Direita com Imagens -->
+            <div class="fp-sidebar-col">
+                <!-- Notícia 1: Incêndio -->
+                <div class="sidebar-item" style="border-top: none;"> <!-- Sem borda na primeira -->
+                    <img src="FIRE.png" class="sidebar-img" alt="Incêndio no Brooklyn">
+                    <div class="sidebar-meta">
+                        <span class="sidebar-cat">CRIME</span> <span style="color:#ccc;">|</span> <span class="sidebar-author">ROBBIE ROBERTSON</span>
+                    </div>
+                    <h3 class="sidebar-title">Incêndio suspeito em South Brooklyn evacua três quarteirões.</h3>
+                </div>
+
+                <!-- Notícia 2: Strides -->
+                <div class="sidebar-item">
+                    <img src="STRIDES.png" class="sidebar-img" alt="NY Strides Campeões">
+                    <div class="sidebar-meta">
+                        <span class="sidebar-cat">ESPORTE</span> <span style="color:#ccc;">|</span> <span class="sidebar-author">NED LEEDS</span>
+                    </div>
+                    <h3 class="sidebar-title">Vitória Histórica: NY Strides atropelam Mavericks e levam a taça da NBA.</h3>
+                </div>
+
+                <!-- Notícia 3: Pesquisa -->
+                <div class="sidebar-item">
+                    <img src="BETTY.jpg" class="sidebar-img" alt="Pesquisa ESU">
+                    <div class="sidebar-meta">
+                        <span class="sidebar-cat">POLÍTICA</span> <span style="color:#ccc;">|</span> <span class="sidebar-author">BETTY BRANT</span>
+                    </div>
+                    <h3 class="sidebar-title">Pesquisa da ESU: Confiança nas instituições públicas atinge a mínima histórica.</h3>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 2: MATÉRIA MARY JANE -->
+<div class="slide-container" id="slide2">
+     <div class="site-nav">
+        <div class="top-bar-grid">
+            <div></div>
+            <span style="text-align: center;">Edição Digital</span>
+            <span style="text-align: right;"><i class="fa-solid fa-user"></i> Entrar</span>
+        </div>
+        <div class="masthead">
+            <img src="Título.png" alt="Clarim Diário">
+        </div>
+        <div class="nav-links">
+            <span>Mundo</span>
+            <span style="color:#8b0000; text-decoration: underline;">Nova York</span>
+            <span>Política</span>
+            <span>Crime</span>
+            <span>Cultura</span>
+            <span>Esporte</span>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Layout da Matéria Interna -->
+        <div class="mj-layout">
+            <!-- Coluna Texto -->
+            <div>
+                 <div class="article-meta" style="margin-bottom: 20px;">
+                    <span><span style="color:#8b0000;">POR MARY JANE WATSON</span> • CRIME & JUSTIÇA</span>
+                </div>
+                <h1 style="font-size: 54px; line-height: 0.95; margin-bottom: 15px;">DISTINTIVOS SEM BRILHO</h1>
+                <h2 style="font-size: 24px; font-weight: 400; font-style: italic; color: #555; margin-bottom: 20px;">Entrevistas exclusivas revelam o colapso estrutural da segurança pública e o abandono de South Brooklyn.</h2>
+                
+                <p style="font-size: 18px; text-align: justify;">
+                    Durante três meses, acompanhei a rotina de cinco distritos. Em South Brooklyn, a situação reflete um sintoma alarmante de abandono institucional. Relatórios são ignorados e chamados de emergência demoram o triplo do tempo, expondo não a falha de indivíduos, mas uma fratura exposta na administração pública.
+                </p>
+                <p style="font-size: 18px; text-align: justify; margin-top: 15px;">
+                    "Não somos equipados para uma guerra", confessou um sargento. O problema transcende o uniforme. O que vemos é a institucionalização do descaso, onde a falta de diretrizes claras e o sucateamento transformaram a força policial em uma estrutura reativa, incapaz de prevenir o caos que deveria combater.
+                </p>
+            </div>
+            
+            <!-- Coluna Imagem - MJ.jpg -->
+            <div>
+                <img src="MJ.png" class="mj-image" alt="Fachada da Delegacia NYPD">
+                <div class="fp-caption">DEPARTAMENTO DE POLÍCIA DE SOUTH BROOKLYN. FOTO: M.J. WATSON</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 3: GIRO RÁPIDO -->
+<div class="slide-container" id="slide3">
+     <div class="site-nav">
+        <!-- Grid para centralização perfeita -->
+        <div class="top-bar-grid">
+            <div></div> 
+            <span style="text-align: center;">Edição Digital</span>
+            <span style="text-align: right;"><i class="fa-solid fa-user"></i> Entrar</span>
+        </div>
+        <div class="masthead">
+            <img src="Título.png" alt="Clarim Diário">
+        </div>
+        <div class="nav-links">
+            <span>Mundo</span>
+            <span style="color:#8b0000; text-decoration: underline;">Nova York</span>
+            <span>Política</span>
+            <span>Crime</span>
+            <span>Cultura</span>
+            <span>Esporte</span>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <h2 style="margin-bottom: 20px; font-style:italic; border-bottom: 1px solid #000; padding-bottom:10px;">Giro pela Cidade</h2>
+        <div class="city-beat-grid">
+            <div class="beat-tile">
+                <div>
+                    <div class="beat-header">
+                        <h3>Trânsito</h3>
+                        <i class="fa-solid fa-car beat-icon" style="color:#8b0000;"></i>
+                    </div>
+                    <div class="beat-content">
+                        <p>Engarrafamento monstro na Ponte George Washington devido a incidente envolvendo caminhão da Oscorp.</p>
+                    </div>
+                </div>
+                <div class="beat-stat" style="color:#d9534f;">+45 min</div>
+            </div>
+            <div class="beat-tile">
+                <div>
+                    <div class="beat-header">
+                        <h3>Clima</h3>
+                        <i class="fa-solid fa-cloud-showers-heavy beat-icon" style="color:#8b0000;"></i>
+                    </div>
+                    <div class="beat-content">
+                        <p>Chuva pesada esperada para esta noite. Visibilidade baixa em Hell's Kitchen e Harlem.</p>
+                    </div>
+                </div>
+                <div class="beat-stat">14°C</div>
+            </div>
+             <div class="beat-tile">
+                <div>
+                    <div class="beat-header">
+                        <h3>Polícia</h3>
+                        <i class="fa-solid fa-building-shield beat-icon" style="color:#8b0000;"></i>
+                    </div>
+                    <div class="beat-content">
+                        <p>Capitã Yuri Watanabe pede calma após avistamentos não confirmados do "Homem-Aranha" no Queens.</p>
+                    </div>
+                </div>
+                <div class="beat-stat">Alerta</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 4: ASSINATURA -->
+<div class="slide-container" id="slide4">
+    <div class="subscribe-layout">
+        <div class="subscribe-box">
+            <img src="Título.png" alt="Clarim Diário Logo" class="logo-img">
+            <h2>A verdade custa caro.</h2>
+            <p style="font-size:20px; margin-top:20px; font-weight:400;">Não deixe que a "mídia fake" ou vigilantes mascarados ditem a narrativa. Apoie o jornalismo que não tem medo de apontar o dedo.</p>
+            <button class="subscribe-btn">Assine Agora • $4.99/mês</button>
+            <p style="font-size:14px; margin-top:20px; color:#666; font-family:'Libre Franklin';">Cancele a qualquer momento. Mas você não vai querer.</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
